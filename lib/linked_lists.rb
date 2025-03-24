@@ -1,9 +1,15 @@
+# prevents collissions in the set class.
+
+# frozen_string_literal: true
+
 require_relative 'node'
 
 class LinkedList
+  attr_reader :head
+
   def initialize
     @head = nil
-  end 
+  end
 
   def append(key, value)
     new_node = Node.new(key, value)
@@ -12,9 +18,7 @@ class LinkedList
       @head = new_node
     else
       current = @head
-      while current.next_node
-        current = current.next_node
-      end
+      current = current.next_node while current.next_node
       current.next_node = new_node
     end
   end
@@ -23,6 +27,7 @@ class LinkedList
     current = @head
     while current
       return current if current.key == key
+
       current = current.next_node
     end
     nil
@@ -30,15 +35,36 @@ class LinkedList
 
   def remove(key)
     return nil if @head.nil?
-
-    # Handle case where the head node contains the key
+  
     if @head.key == key
-      removed_node = @head
-      @head = @head.next_node
-      return removed_node.key
+      return remove_head
+    end
+  
+    remove_from_list(key)
+  end
+
+  def to_s
+    current = @head
+    result = ''
+
+    while current
+      result << "( #{current.key} ) -> "
+      current = current.next_node
     end
 
-    # Traverse the list to find and remove the node
+    result << 'nil'
+    result
+  end
+
+  private
+  # helper methods for remove(key)
+  def remove_head
+    removed_node = @head
+    @head = @head.next_node
+    removed_node.key
+  end
+  
+  def remove_from_list(key)
     current = @head
     while current.next_node
       if current.next_node.key == key
@@ -49,22 +75,5 @@ class LinkedList
       current = current.next_node
     end
     nil
-  end
-
-  def head
-    @head
-  end
-
-  def to_s
-    current = @head
-    result = ""
-    
-    while current
-      result << "( #{current.key} ) -> "
-      current = current.next_node
-    end
-    
-    result << "nil"
-    result
   end
 end
