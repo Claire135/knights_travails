@@ -8,6 +8,7 @@ class ChessBoard
 
     def initialize
         @board = generate_board
+        connect_nodes
     end
 
     def generate_board
@@ -22,8 +23,18 @@ class ChessBoard
         board
     end
 
+    def connect_nodes(piece, piece_moves_method)
+        @board.each do |row|
+            row.each do |node|
+                valid_knight_moves(node.x_axis, node.y_axis).each do |new_move_x, new_move_y|
+                    node.connections << @board[new_move_x][new_move_y]
+                end
+            end
+        end
+    end
+
 end
 
-new = ChessBoard.new
-new.print_board
+chessboard = ChessBoard.new
+chessboard.print_node_connections
 
